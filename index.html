@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./socket.io.js" ></script>
+
+</head>
+<body>
+    <form id="loginForm" action="http://192.168.15.5/HMI/login.html" method="post">
+        <input class="formVal" type="hidden" id="inputUser" name="inputUser" value="innovagroup"></input>
+        <input class="formVal" type="hidden" id="inputPass" name="inputPass" value="6969"></input>
+        <input class="formVal" type="hidden" id="inputPassHash" name="inputPassHash" value="6161b2838ffa6ce17b84db3b45b4f8437855ecf43e75de2d1ad0008eaae91aa0"></input>
+    </form>
+    
+    <script>
+        // document.getElementById("loginForm").submit();
+        // var elements = document.getElementsByClassName("formVal");
+        // var formData = new FormData(); 
+        // for(var i=0; i<elements.length; i++)
+        // {
+        //     formData.append(elements[i].name, elements[i].value);
+        // }
+        // var xmlHttp = new XMLHttpRequest();
+        // xmlHttp.onreadystatechange = function()
+        // {   
+        //     console.log(xmlHttp.readyState);
+        //     console.log(xmlHttp.status);
+        //     if(xmlHttp.readyState == 4 && xmlHttp.status == 200)
+        //     {
+        //         console.log(xmlHttp.responseText);
+        //     }
+        // }
+        // xmlHttp.open("post", "http://192.168.15.5/HMI/login.html"); 
+        // xmlHttp.send(formData); 
+        var socket = io.connect('http://192.168.15.5');
+        
+        console.log(socket);
+        
+        socket.emit('alive');
+        
+        socket.emit('initReady');
+
+        socket.emit('joinroom', 'HMI');
+        socket.emit('joinroom', 'remoteHMI');
+            
+        setInterval(function() {
+            socket.emit('hmiHeartbeat');
+        }, 500);
+        
+        setInterval(function() {
+            socket.emit('alive');
+        }, 5000);
+
+        socket.on('frommedi', function (data) {
+            console.log(data);
+        });
+        socket.on('disconnect', function (data) {
+            console.log(data);
+        });
+    </script>
+</body>
+</html>
+
+
+<!-- "from":"hull/algo -->

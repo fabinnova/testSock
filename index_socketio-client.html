@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+</head>
+<body>
+    <script src="https://cdn.jsdelivr.net/npm/socket.io-client@2/dist/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@beta/dist/js.cookie.min.js"></script>
+    <script>
+      var socket = io('http://192.168.15.5');
+      socket.on('connect', function(){
+        socket.emit('alive');
+        socket.emit('initReady');
+        socket.emit('joinroom', 'HMI');
+        socket.emit('joinroom', 'remoteHMI');
+        setInterval(function() {
+            socket.emit('hmiHeartbeat');
+        }, 500);
+        
+        setInterval(function() {
+            socket.emit('alive');
+        }, 5000);
+
+        console.log(Cookies.get('io') );
+      });
+      socket.on('disconnect', function(){
+          console.log("disconnect");
+      });
+      socket.on('frommedi', function (data) {
+        console.log(1);
+      });
+    </script> 
+</body>
+</html>
+
+
+<!-- "from":"hull/algo -->
